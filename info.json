@@ -1,0 +1,9 @@
+{
+  "name": "suspension-coffin",
+  "version": "1.0.0",
+  "title": "Suspension Coffin",
+  "author": "mdite",
+  "description": "Adds a fixed suspension coffin vehicle. Entering it accelerates the game to 100x; exiting restores normal speed.",
+  "factorio_version": "2.1",
+  "dependencies": ["base >= 2.1.0", "space-age >= 2.1.0"]
+}

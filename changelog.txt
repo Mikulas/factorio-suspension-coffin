@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 15. 07. 2026
+  Major Features:
+    - Added the Suspension Coffin, a placeable 4x4 chamber that accelerates the simulation to 100x while occupied.
+    - Added a five-second game-time speed ramp, animated vignette, and suspension status display.
+  Features:
+    - Added a dedicated technology unlocked after cryogenic science.
+    - Added a 30-second recipe using cold fluoroketone barrels, a cryogenic plant, heating towers, and steel.
+    - Prevented suspended players from interacting with inventories or the world while preserving the normal vehicle-exit control.
+    - Restricted construction to planetary surfaces.

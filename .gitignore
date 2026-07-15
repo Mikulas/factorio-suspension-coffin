@@ -1,0 +1,6 @@
+# macOS metadata
+.DS_Store
+
+# Generated package output
+.build/
+dist/
