@@ -20,6 +20,8 @@ package_variant() {
     --exclude ".DS_Store" \
     --exclude ".git" \
     --exclude "dist" \
+    --exclude "/scripts/" \
+    --exclude "/screenshots/" \
     "$ROOT_DIR/" "$package_root/"
 
   python3 - "$package_root/info.json" "$mod_version" <<'PY'

@@ -4,6 +4,7 @@ Adds a fixed suspension coffin vehicle.
 
 - Entering the coffin sets game speed to `100`.
 - Exiting the coffin restores game speed to `1`.
+- Coffins support circuit-network enable conditions. When the condition becomes false, the occupant is automatically ejected and regular `1x` speed resumes. This can be used to programmatically stop suspension when the factory needs attention.
 - If multiple players are in coffins, speed remains `100` until the last tracked player exits.
 
 ## Release packaging

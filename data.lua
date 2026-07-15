@@ -19,38 +19,75 @@ local vignette_sprite = {
   height = 1024
 }
 
-local coffin = {
-  type = "simple-entity-with-owner",
-  name = "suspension-coffin",
-  localised_name = {"entity-name.suspension-coffin"},
-  localised_description = {"entity-description.suspension-coffin"},
-  icon = item_icon,
-  icon_size = 64,
-  flags = {"placeable-player", "player-creation"},
-  minable = {
-    mining_time = 0.5,
-    result = "suspension-coffin"
-  },
-  selection_box = {{-2.0, -2.0}, {2.0, 2.0}},
-  collision_box = {{-1.9, -1.9}, {1.9, 1.9}},
-  surface_conditions = {
-    {
-      property = "gravity",
-      min = 0.1
-    }
-  },
-  max_health = 500,
-  corpse = "medium-remnants",
-  dying_explosion = "medium-explosion",
-  picture = {
-    filename = entity_graphic,
-    priority = "high",
-    width = 1254,
-    height = 1254,
-    scale = 0.12,
-    shift = {0, -0.05}
+-- Factorio 2.1 land mines expose only the generic circuit enable condition,
+-- without the lamp-specific "always on" and color controls. All mine trigger
+-- behavior is removed; this prototype is only a circuit-controlled shell.
+local coffin = table.deepcopy(data.raw["land-mine"]["land-mine"])
+
+coffin.name = "suspension-coffin-controller"
+coffin.localised_name = {"entity-name.suspension-coffin"}
+coffin.localised_description = {"entity-description.suspension-coffin"}
+coffin.icon = item_icon
+coffin.icon_size = 64
+coffin.flags = {"placeable-player", "player-creation"}
+coffin.fast_replaceable_group = nil
+coffin.alert_when_damaged = true
+coffin.minable = {
+  mining_time = 0.5,
+  result = "suspension-coffin"
+}
+coffin.selection_box = {{-2.0, -2.0}, {2.0, 2.0}}
+coffin.collision_box = {{-1.9, -1.9}, {1.9, 1.9}}
+coffin.collision_mask = {
+  layers = {
+    item = true,
+    object = true,
+    player = true,
+    water_tile = true,
+    is_object = true,
+    is_lower_object = true
   }
 }
+coffin.surface_conditions = {
+  {
+    property = "gravity",
+    min = 0.1
+  }
+}
+coffin.max_health = 500
+coffin.corpse = "medium-remnants"
+coffin.dying_explosion = "medium-explosion"
+coffin.action = nil
+coffin.ammo_category = nil
+coffin.force_die_on_attack = false
+coffin.trigger_radius = 0
+coffin.trigger_collision_mask = {layers = {}}
+coffin.is_military_target = false
+coffin.circuit_connector = {
+  points = {
+    wire = {
+      red = {1.15, 1.15},
+      green = {1.35, 1.15}
+    },
+    shadow = {
+      red = {1.15, 1.15},
+      green = {1.35, 1.15}
+    }
+  }
+}
+
+local coffin_picture = {
+  filename = entity_graphic,
+  priority = "high",
+  width = 1254,
+  height = 1254,
+  scale = 0.12,
+  shift = {0, -0.05}
+}
+
+coffin.picture_safe = coffin_picture
+coffin.picture_set = table.deepcopy(coffin_picture)
+coffin.picture_set_enemy = table.deepcopy(coffin_picture)
 
 local coffin_vehicle = table.deepcopy(data.raw["car"]["car"])
 
@@ -110,7 +147,7 @@ local item = {
   icon_size = 64,
   subgroup = "suspension-coffin",
   order = "a[suspension-coffin]",
-  place_result = "suspension-coffin",
+  place_result = "suspension-coffin-controller",
   weight = 1 * tons,
   stack_size = 20
 }

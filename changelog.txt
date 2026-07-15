@@ -1,9 +1,23 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 15. 07. 2026
+  Features:
+    - Added native circuit-network connections and an enable condition to the Suspension Coffin.
+    - Disabled coffins now immediately eject their occupants and cannot be entered until enabled again.
+    - Added a console message explaining when suspension is cancelled by a circuit condition.
+  Changes:
+    - Added a focused circuit enable-condition panel without lamp-specific controls.
+    - Moved the circuit wire connection point toward the lower-right side of the coffin.
+  Bugfixes:
+    - Fixed occupants not being ejected when a coffin was disabled by its circuit condition.
+  Compatibility:
+    - Added a migration for Suspension Coffins placed with version 1.0.0.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 15. 07. 2026
   Major Features:
     - Added the Suspension Coffin, a placeable 4x4 chamber that accelerates the simulation to 100x while occupied.
-    - Added a five-second game-time speed ramp, animated vignette, and suspension status display.
+    - Added a smooth game-speed ramp, animated vignette, and suspension status display.
   Features:
     - Added a dedicated technology unlocked after cryogenic science.
     - Added a 30-second recipe using cold fluoroketone barrels, a cryogenic plant, heating towers, and steel.

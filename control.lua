@@ -1,4 +1,4 @@
-local COFFIN_NAME = "suspension-coffin"
+local COFFIN_NAME = "suspension-coffin-controller"
 local COFFIN_VEHICLE_NAME = "suspension-coffin-vehicle"
 local COFFIN_SPEED = 100
 local NORMAL_SPEED = 1
@@ -81,6 +81,32 @@ end
 
 local function is_coffin_entity(entity)
   return entity and entity.valid and entity.name == COFFIN_NAME
+end
+
+local function get_coffin_for_vehicle(vehicle)
+  if not is_coffin_vehicle(vehicle) then
+    return nil
+  end
+
+  local coffin_unit_number = storage.vehicle_to_coffin[vehicle.unit_number]
+  local link = coffin_unit_number and storage.coffins[coffin_unit_number]
+  local coffin = link and link.coffin
+
+  if is_coffin_entity(coffin) then
+    return coffin
+  end
+
+  return nil
+end
+
+local function coffin_allows_suspension(vehicle)
+  local coffin = get_coffin_for_vehicle(vehicle)
+  if not coffin then
+    return false
+  end
+
+  local behavior = coffin.get_control_behavior()
+  return not behavior or not behavior.disabled
 end
 
 local function destroy_vignette(player_index)
@@ -484,13 +510,26 @@ local function update_suspension_transitions()
   update_active_vignettes()
 
   local changed = false
+  local players_to_eject = {}
 
   for player_index in pairs(storage.players_in_coffins) do
     local player = game.get_player(player_index)
     if player and player.valid and is_coffin_vehicle(player.vehicle) then
-      update_suspension_status_text(player)
-      block_suspended_player_interaction(player)
+      if coffin_allows_suspension(player.vehicle) then
+        update_suspension_status_text(player)
+        block_suspended_player_interaction(player)
+      else
+        players_to_eject[#players_to_eject + 1] = player
+      end
     end
+  end
+
+  -- Changing the driving state raises the normal driving-state event, which
+  -- performs the same immediate UI, permission, and game-speed cleanup as a
+  -- player manually exiting the coffin.
+  for _, player in pairs(players_to_eject) do
+    player.print({"suspension-coffin.cancelled-by-circuit"})
+    player.driving = false
   end
 
   for player_index, transition in pairs(storage.suspension_transitions) do
@@ -524,6 +563,11 @@ local function on_player_driving_changed_state(event)
 
   local vehicle = player.vehicle
   if is_coffin_vehicle(vehicle) then
+    if not coffin_allows_suspension(vehicle) then
+      player.driving = false
+      return
+    end
+
     storage.players_in_coffins[event.player_index] = true
     storage.suspension_transitions[event.player_index] = {start_tick = game.tick}
     create_vignette(player, vehicle)

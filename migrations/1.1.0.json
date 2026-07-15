@@ -1,0 +1,6 @@
+{
+  "entity": [
+    ["suspension-coffin", "suspension-coffin-controller"],
+    ["suspension-coffin-circuit", "suspension-coffin-controller"]
+  ]
+}
